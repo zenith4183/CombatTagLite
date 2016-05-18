@@ -1,6 +1,6 @@
-# CombatTagPlus
+# CombatTagLite
 
-*CombatTagPlus is the last plugin you'll ever need to stop those dirty combat loggers!*
+*CombatTagLite is the last plugin you'll ever need to stop those dirty combat loggers!*
 
 ## Features
 
@@ -22,10 +22,10 @@
 
 ## Installation
 
-1. Obtain the latest version of CombatTagPlus from the [build server](https://drone.io/github.com/zenith4183/CombatTagPlus/files).
-2. Copy or move **CombatTagPlus.jar** into your server's *plugins* folder.
+1. Obtain the latest version of CombatTagLite from the [build server](https://drone.io/github.com/zenith4183/CombatTagLite/files).
+2. Copy or move **CombatTagLite.jar** into your server's *plugins* folder.
 3. **Optionally** obtain and install a compatible version of BarAPI (see the *Features* section above for downloads)
-4. Start the server. _This creates a new file **plugins/CombatTagPlus/config.yml**_
+4. Start the server. _This creates a new file **plugins/CombatTagLite/config.yml**_
 5. Edit the newly created configuration file with desired behavior.
 6. If you made any changes, run the command **/ctreload** from console or as an operator.
 
@@ -33,16 +33,16 @@
 
 | **Permission**           | **Description**                            | **Default** |
 | -------------------------| ------------------------------------------ | ----------- |
-| ctplus.reload            | Reload CombatTagPlus configuration         | operator    |
-| ctplus.bypass.tag        | Bypass combat tagging                      | operator    |
-| ctplus.bypass.command    | Bypass command restrictions in combat      | operator    |
-| ctplus.bypass.blockedit  | Bypass block edit restrictions in combat   | operator    |
-| ctplus.bypass.enderpearl | Bypass enderpearl restrictions in combat   | operator    |
-| ctplus.bypass.flying     | Bypass flying restriction in combat        | operator    |
-| ctplus.bypass.teleport   | Bypass teleportation restriction in combat | operator    |
-| ctplus.check             | Check remaining combat timer               | everyone    |
-| ctplus.logout            | Initiate a safe logout                     | everyone    |
-| ctplus.notify.kill       | Receive kill/death message broadcast       | everyone    |
+| ctlite.reload            | Reload CombatTagLite configuration         | operator    |
+| ctlite.bypass.tag        | Bypass combat tagging                      | operator    |
+| ctlite.bypass.command    | Bypass command restrictions in combat      | operator    |
+| ctlite.bypass.blockedit  | Bypass block edit restrictions in combat   | operator    |
+| ctlite.bypass.enderpearl | Bypass enderpearl restrictions in combat   | operator    |
+| ctlite.bypass.flying     | Bypass flying restriction in combat        | operator    |
+| ctlite.bypass.teleport   | Bypass teleportation restriction in combat | operator    |
+| ctlite.check             | Check remaining combat timer               | everyone    |
+| ctlite.logout            | Initiate a safe logout                     | everyone    |
+| ctlite.notify.kill       | Receive kill/death message broadcast       | everyone    |
 
 ## Contributing
 
@@ -54,5 +54,5 @@ Thanks :)
 
 ## License
 
-CombatTagPlus is licensed to you freely under the terms of the [LGPL license](https://www.gnu.org/licenses/lgpl.html).
+CombatTagLite is licensed to you freely under the terms of the [LGPL license](https://www.gnu.org/licenses/lgpl.html).
 
