@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.minelink</groupId>
-  <artifactId>CombatTagPlusParent</artifactId>
+  <artifactId>CombatTagLiteParent</artifactId>
   <packaging>pom</packaging>
   <version>1.2.4-SNAPSHOT</version>
 
@@ -15,9 +15,9 @@
   </properties>
 
   <modules>
-    <module>CombatTagPlusHook</module>
-    <module>CombatTagPlusWG-v6</module>
-    <module>CombatTagPlus</module>
+    <module>CombatTagLiteHook</module>
+    <module>CombatTagLiteWG-v6</module>
+    <module>CombatTagLite</module>
   </modules>
 
   <distributionManagement>

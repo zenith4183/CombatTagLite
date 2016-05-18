@@ -1,0 +1,34 @@
+name: CombatTagLite
+description: Tag players in combat
+version: ${version}
+authors: [Byteflux, Sudzzy]
+main: net.minelink.ctlite.CombatTagLite
+softdepend: [BarAPI, WorldGuard, BossBarAPI, ActionBarAPI]
+commands:
+  combattaglite:
+    aliases: [ctlite, ct, combattag]
+    description: Check combat tag timer
+    permission: ctlite.check
+    permission-message: '§cYou do not have permission to use that command.'
+  ctlitereload:
+    aliases: [ctreload]
+    description: Reload CombatTagPlus config
+    permission: ctlite.reload
+    permission-message: '§cYou do not have permission to use that command.'
+  ctlitelogout:
+    aliases: [ctlogout, ctlog, logout]
+    description: Logs out the player without spawning an NPC or killing them
+    permission: ctlite.logout
+    permission-message: '§cYou do not have permission to use that command.'
+permissions:
+  ctlite.reload: {default: op}
+  ctlite.bypass.tag: {default: op}
+  ctlite.bypass.command: {default: op}
+  ctlite.bypass.blockedit: {default: op}
+  ctlite.bypass.enderpearl: {default: op}
+  ctlite.bypass.flying: {default: op}
+  ctlite.bypass.teleport: {default: op}
+  ctlite.bypass.craft: {default: op}
+  ctlite.check: {default: true}
+  ctlite.logout: {default: true}
+  ctlite.notify.kill: {default: true}
