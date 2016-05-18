@@ -22,7 +22,7 @@
 
 ## Installation
 
-1. Obtain the latest version of CombatTagPlus from the [build server](http://ci.minelink.net/job/CombatTagPlus/).
+1. Obtain the latest version of CombatTagPlus from the [build server](https://drone.io/github.com/zenith4183/CombatTagPlus/files).
 2. Copy or move **CombatTagPlus.jar** into your server's *plugins* folder.
 3. **Optionally** obtain and install a compatible version of BarAPI (see the *Features* section above for downloads)
 4. Start the server. _This creates a new file **plugins/CombatTagPlus/config.yml**_
