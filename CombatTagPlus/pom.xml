@@ -88,12 +88,6 @@
     </dependency>
     <dependency>
       <groupId>net.minelink</groupId>
-      <artifactId>CombatTagPlusCompat-API</artifactId>
-      <version>1.2.4-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.minelink</groupId>
       <artifactId>CombatTagPlusHook</artifactId>
       <version>1.2.4-SNAPSHOT</version>
       <scope>compile</scope>
