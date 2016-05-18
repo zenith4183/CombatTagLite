@@ -43,15 +43,12 @@ public final class TagManager {
     }
 
     public void tag(Player victim, Player attacker, Set<Flag> flags) {
-        NpcPlayerHelper helper = plugin.getNpcPlayerHelper();
 
         // Determine victim identity
         UUID victimId = null;
         if (victim != null) {
             if (victim.getHealth() <= 0 || victim.isDead()) {
                 victim = null;
-            } else if (helper.isNpc(victim)) {
-                victimId = helper.getIdentity(victim).getId();
             } else if (!victim.hasPermission("ctplus.bypass.tag")) {
                 victimId = victim.getUniqueId();
             } else {
@@ -64,8 +61,6 @@ public final class TagManager {
         if (attacker != null) {
             if (attacker.getHealth() <= 0 || attacker.isDead() || attacker == victim) {
                 attacker = null;
-            } else if (helper.isNpc(attacker)) {
-                attackerId = helper.getIdentity(attacker).getId();
             } else if (!attacker.hasPermission("ctplus.bypass.tag")) {
                 attackerId = attacker.getUniqueId();
             } else {
@@ -86,7 +81,7 @@ public final class TagManager {
 
         // Create new tag
         long expireTime = System.currentTimeMillis() + (event.getTagDuration() * 1000);
-        Tag tag = new Tag(helper, expireTime, victim, attacker);
+        Tag tag = new Tag(expireTime, victim, attacker);
 
         // Add victim to tagged players
         if (victim != null && flags.contains(Flag.TAG_VICTIM)) {

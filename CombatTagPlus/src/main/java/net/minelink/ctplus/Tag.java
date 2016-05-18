@@ -20,29 +20,19 @@ public final class Tag {
 
     private String attackerName;
 
-    Tag(NpcPlayerHelper helper, long expireTime, Player victim, Player attacker) {
+    Tag(long expireTime, Player victim, Player attacker) {
         this.expireTime = expireTime;
 
         // Determine victim identity
         if (victim != null) {
-            if (helper.isNpc(victim)) {
-                this.victimId = helper.getIdentity(victim).getId();
-                this.victimName = helper.getIdentity(victim).getName();
-            } else {
-                this.victimId = victim.getUniqueId();
-                this.victimName = victim.getName();
-            }
+            this.victimId = victim.getUniqueId();
+            this.victimName = victim.getName();
         }
 
         // Determine attacker identity
         if (attacker != null) {
-            if (helper.isNpc(attacker)) {
-                this.attackerId = helper.getIdentity(attacker).getId();
-                this.attackerName = helper.getIdentity(attacker).getName();
-            } else {
-                this.attackerId = attacker.getUniqueId();
-                this.attackerName = attacker.getName();
-            }
+            this.attackerId = attacker.getUniqueId();
+            this.attackerName = attacker.getName();
         }
     }
 

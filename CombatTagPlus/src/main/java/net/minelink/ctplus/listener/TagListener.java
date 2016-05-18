@@ -146,9 +146,7 @@ public final class TagListener implements Listener {
             Player victim = (Player) entity;
             if (victim == attacker) continue;
 
-            if (!plugin.getNpcPlayerHelper().isNpc(victim)) {
-                plugin.getTagManager().tag(victim, attacker);
-            }
+            plugin.getTagManager().tag(victim, attacker);
         }
     }
 
@@ -197,10 +195,8 @@ public final class TagListener implements Listener {
     public void untagPlayer(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        // Remove combat tag from player if not a NPC
-        if (!plugin.getNpcPlayerHelper().isNpc(player)) {
-            plugin.getTagManager().untag(player.getUniqueId());
-        }
+        // Remove combat tag from player
+        plugin.getTagManager().untag(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

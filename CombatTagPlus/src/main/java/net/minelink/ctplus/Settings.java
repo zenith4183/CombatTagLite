@@ -229,10 +229,6 @@ public final class Settings {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public boolean instantlyKill() {
-        return plugin.getConfig().getBoolean("instantly-kill");
-    }
-
     public boolean untagOnKick() {
         return plugin.getConfig().getBoolean("untag-on-kick");
     }
@@ -294,26 +290,6 @@ public final class Settings {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public int getNpcDespawnTime() {
-        return plugin.getConfig().getInt("npc-despawn-time", 60);
-    }
-
-    public int getNpcDespawnMillis() {
-        return getNpcDespawnTime() * 1000;
-    }
-
-    public boolean resetDespawnTimeOnHit() {
-        return plugin.getConfig().getBoolean("reset-despawn-time-on-hit");
-    }
-
-    public boolean generateRandomName() {
-        return plugin.getConfig().getBoolean("generate-random-name");
-    }
-
-    public String getRandomNamePrefix() {
-        return plugin.getConfig().getString("random-name-prefix");
-    }
-
     public String getKillMessage() {
         String message = plugin.getConfig().getString("kill-message", "");
         return ChatColor.translateAlternateColorCodes('&', message);
@@ -360,14 +336,6 @@ public final class Settings {
 
     public byte getForceFieldMaterialDamage() {
         return (byte) plugin.getConfig().getInt("force-field-material-damage");
-    }
-
-    public boolean useFactions() {
-        return plugin.getConfig().getBoolean("factions");
-    }
-
-    public boolean useTowny() {
-        return plugin.getConfig().getBoolean("towny");
     }
 
     public boolean useWorldGuard() {

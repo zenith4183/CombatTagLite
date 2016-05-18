@@ -3,6 +3,7 @@ package net.minelink.ctplus.listener;
 import net.minelink.ctplus.CombatTagPlus;
 import net.minelink.ctplus.Tag;
 import net.minelink.ctplus.event.PlayerCombatTagEvent;
+import net.minelink.ctplus.task.SafeLogoutTask;
 import net.minelink.ctplus.task.TagUpdateTask;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -16,7 +17,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -39,9 +39,6 @@ public final class PlayerListener implements Listener {
     public void addPlayer(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        // Send a Player List of all the NPCs for client visibility reasons
-        plugin.getNpcPlayerHelper().createPlayerList(player);
-
         // Add player to cache
         plugin.getPlayerCache().addPlayer(player);
     }
@@ -49,9 +46,6 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void removePlayer(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-
-        // Remove all NPCs from the Player List for player
-        plugin.getNpcPlayerHelper().removePlayerList(player);
 
         // Remove player from cache
         plugin.getPlayerCache().removePlayer(player);
@@ -71,11 +65,6 @@ public final class PlayerListener implements Listener {
 
         Player player = event.getEntity();
         UUID playerId = player.getUniqueId();
-
-        // Player is NPC, determine actual identity
-        if (plugin.getNpcPlayerHelper().isNpc(player)) {
-            playerId = plugin.getNpcPlayerHelper().getIdentity(player).getId();
-        }
 
         // Do nothing if player isn't tagged
         Tag tag = plugin.getTagManager().getTag(playerId, true);
@@ -309,6 +298,35 @@ public final class PlayerListener implements Listener {
                 plugin.getHookManager().isPvpEnabledAt(event.getFrom())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerLogout(PlayerQuitEvent event) {
+        // Do nothing if player is not combat tagged and NPCs only spawn if tagged
+        Player player = event.getPlayer();
+
+        // Do nothing if player is dead
+        if (player.isDead()) return;
+
+        boolean isTagged = plugin.getTagManager().isTagged(player.getUniqueId());
+        if (!isTagged && !plugin.getSettings().alwaysSpawn()) return;
+
+        // Do nothing if player is not within enabled world
+        if (plugin.getSettings().getDisabledWorlds().contains(player.getWorld().getName()))
+            return;
+
+        // Do nothing if a player logs off in combat in a WorldGuard protected region
+        if (!plugin.getHookManager().isPvpEnabledAt(player.getLocation()))
+            return;
+
+        // Do nothing if player has permission
+        if (player.hasPermission("ctplus.bypass.tag")) return;
+
+        // Do nothing if player has safely logged out
+        if (SafeLogoutTask.isFinished(player)) return;
+
+        // Kill player
+        player.setHealth(0);
     }
 
 }

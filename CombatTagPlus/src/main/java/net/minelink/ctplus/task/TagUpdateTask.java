@@ -68,9 +68,6 @@ public final class TagUpdateTask extends BukkitRunnable {
     }
 
     public static void run(final CombatTagPlus plugin, final Player p) {
-        // Do nothing if player is a NPC
-        if (plugin.getNpcPlayerHelper().isNpc(p)) return;
-
         final BukkitScheduler s = Bukkit.getScheduler();
 
         // Schedule the task to run on next tick

@@ -34,9 +34,6 @@ logout-success-message: '&aYou were logged out safely.'
 # This message is displayed every second when the player is pending a logout. {remaining} is the time remaining.
 logout-pending-message: '&7Logging out safely in &b{remaining}&7...'
 
-# Instantly kills the player when logged in PvP.
-instantly-kill: false
-
 # Untags the player if they are kicked from combat rather than logging.
 untag-on-kick: false
 
@@ -79,18 +76,6 @@ disable-crafting: false
 # This message is displayed when a player attempts to craft an item while in combat if crafting is disabled.
 disable-crafting-message: '&bCrafting &cis disabled in combat.'
 
-# The duration in seconds to despawn the combat logger's NPC if it hasn't died.
-npc-despawn-time: 60
-
-# Should we reset the NPC despawn time when it gets hit?
-reset-despawn-time-on-hit: true
-
-# Generates a random name for the NPC. Turn this off to use the player name (potentially unsafe!)
-generate-random-name: true
-
-# This is the prefix to use for the random name. 12 characters max.
-random-name-prefix: PvPLogger
-
 # This message is displayed when a player is killed by another player. Set this to '' to display nothing.
 kill-message: '&8&l>> &c{victim} was slain by {attacker}'
 
@@ -124,14 +109,8 @@ force-field-material: STAINED_GLASS
 # Damage value of the material specified above.
 force-field-material-damage: 14
 
-# Enables Factions integration for disabling combat tagging in regions with PVP disabled.
-factions: true
-
 # Enables WorldGuard integration for disabling combat tagging in regions with PVP disabled.
 worldguard: true
-
-# Enables Towny integration for disabling combat tagging in regions with PVP disabled.
-towny: true
 
 # This is a list of worlds where combat tagging should be disabled.
 disabled-worlds: [world_the_end]
