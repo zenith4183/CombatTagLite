@@ -2,21 +2,9 @@
 
 *CombatTagPlus is the last plugin you'll ever need to stop those dirty combat loggers!*
 
-## Supports
-
-* CraftBukkit & Spigot 1.7.9
-* CraftBukkit & Spigot 1.7.10
-* Spigot 1.7.10 / 1.8 Protocol Patch
-* CraftBukkit & Spigot 1.8.0
-* CraftBukkit & Spigot 1.8.3
-* CraftBukkit & Spigot 1.8.4 / 1.8.5
-
 ## Features
 
-* Spawn a NPC when a player logs off in combat
-* Play an effect when NPC spawns
-* Force NPC to always spawn when the player logs off, even out of combat
-* Can instantly kill player when they log off in combat
+* Instantly kill player when they log off in combat
 * Safe Logout that optionally lets tagged player wait a timer without moving to safely log off
 * Disallow flying while player is in combat
 * Disallow block editing while player is in combat
@@ -26,22 +14,11 @@
 * Disable combat tagging for specific worlds
 * Deny specific commands while player is in combat
 * Disallow running back to safety while in combat (can also render a forcefield)
-* Supports WorldGuard PVP deny flag (WorldGuard 5.x and 6.x both supported)
-* Supports Factions PVP flag
-  * _Most mainstream Faction builds are supported:_
-  * Factions 2.7 (MassiveCore 2.7)
-  * Factions 2.6 (MassiveCore 7.4)
-  * FactionsUUID 1.6 (and HCFactions) by @drtshock
-  * FactionsUUID 1.8 by @externo6
-* Supports Towny PVP permission
+* Supports WorldGuard PVP deny flag (WorldGuard 6.x supported)
 * Works with BarAPI to show a boss bar counting down with the player's remaining combat timer
   * _These custom BarAPI builds by @vemacs are more compatible than the official ones:_
   * Spigot 1.8.0: [Download](http://ci.minelink.net/job/BarAPI/5/artifact/target/BarAPI.jar)
   * Spigot 1.7.10 / 1.8 Protocol Patch: [Download](http://ci.minelink.net/job/BarAPI/4/artifact/target/BarAPI.jar)
-
-## Development Builds
-
-You can acquire development builds of CombatTagPlus from the [Minelink Network CI server](http://ci.minelink.net/job/CombatTagPlus/).
 
 ## Installation
 
@@ -79,9 +56,3 @@ Thanks :)
 
 CombatTagPlus is licensed to you freely under the terms of the [LGPL license](https://www.gnu.org/licenses/lgpl.html).
 
-## Special Thanks To:
-
-![YourKit-Logo](https://www.yourkit.com/images/yklogo.png)
-
-[YourKit](http://www.yourkit.com/) supports open source projects with its full-featured Java Profiler.
-YourKit, LLC is the creator of [YourKit Java Profiler](https://www.yourkit.com/java/profiler/index.jsp) and [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/index.jsp), innovative and intelligent tools for profiling Java and .NET applications.
