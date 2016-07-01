@@ -89,13 +89,13 @@
     <dependency>
       <groupId>net.minelink</groupId>
       <artifactId>CombatTagLiteHook</artifactId>
-      <version>1.2.4-SNAPSHOT</version>
+      <version>1.2.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>net.minelink</groupId>
       <artifactId>CombatTagLiteWG-v6</artifactId>
-      <version>1.2.4-SNAPSHOT</version>
+      <version>1.2.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
