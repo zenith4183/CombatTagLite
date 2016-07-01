@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>CombatTagLiteParent</artifactId>
+    <artifactId>CombatTagPlusParent</artifactId>
     <groupId>net.minelink</groupId>
     <version>1.2.4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>CombatTagLiteHook</artifactId>
+  <artifactId>CombatTagPlusCompat-v1_9_R2</artifactId>
 
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
@@ -18,16 +18,22 @@
 
   <repositories>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+      <id>techcable-repo</id>
+      <url>https://repo.techcable.net/content/groups/public/</url>
     </repository>
   </repositories>
 
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.8-R0.1-SNAPSHOT</version>
+      <artifactId>craftbukkit</artifactId>
+      <version>1.9.4-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.minelink</groupId>
+      <artifactId>CombatTagPlusCompat-API</artifactId>
+      <version>1.2.4</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
