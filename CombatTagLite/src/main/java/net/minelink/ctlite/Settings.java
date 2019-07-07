@@ -1,10 +1,5 @@
 package net.minelink.ctlite;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +12,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import static java.util.concurrent.TimeUnit.*;
 
 public final class Settings {
 
@@ -31,7 +35,8 @@ public final class Settings {
     public void load() {
         Configuration defaults = plugin.getConfig().getDefaults();
         defaults.set("disabled-worlds", new ArrayList<>());
-        defaults.set("disabled-commands", new ArrayList<>());
+        defaults.set("command-blacklist", new ArrayList<>());
+        defaults.set("command-whitelist", new ArrayList<>());
     }
 
     public void update() {
@@ -42,7 +47,7 @@ public final class Settings {
         Path path = Paths.get(plugin.getDataFolder().getAbsolutePath() + File.separator + "config.yml");
 
         // Iterate through new config
-        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(plugin.getResource("config.yml"));
+        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("config.yml")));
         for (String key : defaultConfig.getKeys(true)) {
             // Convert key to correct format for a single line
             String oneLineKey = StringUtils.repeat("  ", key.split(".").length) + key + ": ";
@@ -189,6 +194,11 @@ public final class Settings {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public String getTagUnknownMessage() {
+        String message = plugin.getConfig().getString("tag-unknown-message", "");
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
     public String getUntagMessage() {
         String message = plugin.getConfig().getString("untag-message", "");
         return ChatColor.translateAlternateColorCodes('&', message);
@@ -229,8 +239,16 @@ public final class Settings {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public boolean instantlyKill() {
+        return plugin.getConfig().getBoolean("instantly-kill");
+    }
+
     public boolean untagOnKick() {
         return plugin.getConfig().getBoolean("untag-on-kick");
+    }
+
+    public List<String> getUntagOnKickBlacklist() {
+        return plugin.getConfig().getStringList("untag-on-kick-blacklist");
     }
 
     public boolean onlyTagAttacker() {
@@ -247,6 +265,15 @@ public final class Settings {
 
     public String getDisableBlockEditMessage() {
         String message = plugin.getConfig().getString("disable-block-edit-message", "");
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public boolean disableStorageAccess() {
+        return plugin.getConfig().getBoolean("disable-storage-access");
+    }
+
+    public String getDisableStorageAccessMessage() {
+        String message = plugin.getConfig().getString("disable-storage-access-message", "");
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
@@ -351,11 +378,58 @@ public final class Settings {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public List<String> getDisabledCommands() {
-        return plugin.getConfig().getStringList("disabled-commands");
+    public boolean isCommandBlacklisted(String message) {
+        if (message.charAt(0) == '/') {
+            message = message.substring(1);
+        }
+
+        message = message.toLowerCase();
+
+        for (String command : plugin.getConfig().getStringList("command-whitelist")) {
+            if (command.equals("*") || message.equals(command) || message.startsWith(command + " ")) {
+                return false;
+            }
+        }
+
+        for (String command : plugin.getConfig().getStringList("command-blacklist")) {
+            if (command.equals("*") || message.equals(command) || message.startsWith(command + " ")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean untagOnPluginTeleport() {
         return plugin.getConfig().getBoolean("untag-on-plugin-teleport");
+    }
+
+    public String getCommandUntagMessage() {
+        return ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("command-untag-message"));
+    }
+    
+    public String getCommandTagMessage() {
+        return ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("command-tag-message"));
+    }
+
+    public String formatDuration(long seconds) {
+        List<String> parts = new ArrayList<>();
+        for (TimeUnit timeUnit : new TimeUnit[] { DAYS, HOURS, MINUTES, SECONDS }) {
+            long duration = seconds / SECONDS.convert(1, timeUnit);
+            if (duration > 0) {
+                seconds -= SECONDS.convert(duration, timeUnit);
+                String englishWord = timeUnit.name().toLowerCase(Locale.ENGLISH);
+                String durationWord = plugin.getConfig().getString("duration-words." + englishWord, englishWord);
+                parts.add(duration + " " + durationWord);
+            }
+        }
+        String formatted = StringUtils.join(parts, ", ");
+        if (formatted.contains(", ")) {
+            int index = formatted.lastIndexOf(", ");
+            StringBuilder builder = new StringBuilder(formatted);
+            formatted = builder.replace(index, index + 2, " and ").toString();
+        }
+
+        return formatted;
     }
 }

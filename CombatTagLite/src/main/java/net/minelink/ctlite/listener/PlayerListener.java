@@ -1,6 +1,7 @@
 package net.minelink.ctlite.listener;
 
 import net.minelink.ctlite.CombatTagLite;
+import net.minelink.ctlite.event.CombatLogEvent;
 import net.minelink.ctlite.event.PlayerCombatTagEvent;
 import net.minelink.ctlite.task.SafeLogoutTask;
 import net.minelink.ctlite.task.TagUpdateTask;
@@ -17,12 +18,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -41,6 +44,37 @@ public final class PlayerListener implements Listener {
 
         // Add player to cache
         plugin.getPlayerCache().addPlayer(player);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onLogout(PlayerQuitEvent event) {
+        // Do nothing if player is not combat tagged and NPCs only spawn if tagged
+        Player player = event.getPlayer();
+
+        // Do nothing if player is dead
+        if (player.isDead()) return;
+
+        boolean isTagged = plugin.getTagManager().isTagged(player.getUniqueId());
+        if (!isTagged && !plugin.getSettings().alwaysSpawn()) return;
+
+        // Do nothing if player is not within enabled world
+        if (plugin.getSettings().getDisabledWorlds().contains(player.getWorld().getName())) return;
+
+        // Do nothing if a player logs off in combat in a WorldGuard protected region
+        if (!plugin.getHookManager().isPvpEnabledAt(player.getLocation())) return;
+
+        // Do nothing if player has permission
+        if (player.hasPermission("ctplus.bypass.tag")) return;
+
+        // Do nothing if player has safely logged out
+        if (SafeLogoutTask.isFinished(player)) return;
+
+        plugin.getServer().getPluginManager().callEvent(
+                new CombatLogEvent(
+                        player,
+                        isTagged ? CombatLogEvent.Reason.TAGGED : CombatLogEvent.Reason.UNSAFE_LOGOUT
+                )
+        );
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -108,17 +142,14 @@ public final class PlayerListener implements Listener {
         // Do nothing if player isn't even combat tagged
         if (!plugin.getTagManager().isTagged(player.getUniqueId())) return;
 
-        String message = event.getMessage().toLowerCase();
+        String message = event.getMessage();
 
         // Is player using a denied command?
-        for (String command : plugin.getSettings().getDisabledCommands()) {
-            String c = "/" + command.toLowerCase();
-            if (!message.equals(c) && !message.startsWith(c + " ")) continue;
-
+        if (plugin.getSettings().isCommandBlacklisted(message)) {
             // Cancel command
             event.setCancelled(true);
             if (!plugin.getSettings().getDisabledCommandMessage().isEmpty()) {
-                player.sendMessage(plugin.getSettings().getDisabledCommandMessage().replace("{command}", c));
+                player.sendMessage(plugin.getSettings().getDisabledCommandMessage().replace("{command}", message));
             }
         }
     }
@@ -158,6 +189,64 @@ public final class PlayerListener implements Listener {
         event.setCancelled(true);
         if (!plugin.getSettings().getDisableBlockEditMessage().isEmpty()) {
             player.sendMessage(plugin.getSettings().getDisableBlockEditMessage());
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void disableStorageAccess(PlayerCombatTagEvent event) {
+        // Do nothing if storage access is allowed in combat
+        if (!plugin.getSettings().disableStorageAccess()) return;
+
+        // Disable storage access for victim
+        if (event.getVictim() != null) {
+            tryDisableStorageAccess(event.getVictim(), null);
+        }
+
+        // Disable storage access for attacker
+        if (event.getAttacker() != null) {
+            tryDisableStorageAccess(event.getAttacker(), null);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void disableStorageAccess(InventoryOpenEvent event) {
+        if (!(event.getPlayer() instanceof Player)) return;
+        Player player = (Player) event.getPlayer();
+
+        // Do nothing if player isn't even combat tagged
+        if (!plugin.getTagManager().isTagged(player.getUniqueId())) return;
+
+        // Cancel inventory interaction
+        if (tryDisableStorageAccess(player, event.getView())) {
+            event.setCancelled(true);
+        }
+    }
+
+    private boolean tryDisableStorageAccess(Player player, InventoryView view) {
+        // Do nothing if storage access is allowed in combat
+        if (!plugin.getSettings().disableStorageAccess()) {
+            return false;
+        }
+
+        // Do nothing if player has bypass permission
+        if (player.hasPermission("ctplus.bypass.storageaccess")) {
+            return false;
+        }
+
+        if (view == null) view = player.getOpenInventory();
+        switch (view.getType()) {
+            case PLAYER:
+            case CREATIVE:
+                // Ignore interaction with the player's own inventory
+                return false;
+            default:
+                view.close();
+                String message = plugin.getSettings().getDisableStorageAccessMessage();
+                if (!message.isEmpty()) {
+                    player.sendMessage(message);
+                }
+                return true;
         }
     }
 
@@ -248,6 +337,8 @@ public final class PlayerListener implements Listener {
         switch (event.getCause()) {
             case ENDER_PEARL:
                 return;
+            case COMMAND: // Essentials uses COMMAND instead of PLUGIN
+                          //  Thank you @ExoticCoding -- addresses #85
             case PLUGIN:
             case UNKNOWN:
                 // Optionally untag on PLUGIN or UNKNOWN

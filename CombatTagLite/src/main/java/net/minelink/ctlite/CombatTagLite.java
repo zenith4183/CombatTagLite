@@ -3,13 +3,13 @@ package net.minelink.ctlite;
 import net.minelink.ctlite.hook.Hook;
 import net.minelink.ctlite.hook.HookManager;
 import net.minelink.ctlite.listener.ForceFieldListener;
+import net.minelink.ctlite.listener.InstakillListener;
 import net.minelink.ctlite.listener.PlayerListener;
 import net.minelink.ctlite.listener.TagListener;
 import net.minelink.ctlite.task.ForceFieldTask;
 import net.minelink.ctlite.task.SafeLogoutTask;
 import net.minelink.ctlite.task.TagUpdateTask;
 import net.minelink.ctlite.util.BarUtils;
-import net.minelink.ctlite.util.DurationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -73,6 +73,7 @@ public final class CombatTagLite extends JavaPlugin {
 
         // Register event listeners
         Bukkit.getPluginManager().registerEvents(new ForceFieldListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new InstakillListener(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
         Bukkit.getPluginManager().registerEvents(new TagListener(this), this);
 
@@ -131,19 +132,23 @@ public final class CombatTagLite extends JavaPlugin {
         if (cmd.getName().equals("ctlitereload")) {
             reloadConfig();
             getSettings().load();
-            sender.sendMessage(GREEN + getName() + " config reloaded.");
+            if (sender instanceof Player) {
+                sender.sendMessage(GREEN + getName() + " config reloaded.");
+            }
+
+            getLogger().info("Config reloaded by " + sender.getName());
         } else if (cmd.getName().equals("combattaglite")) {
             if (!(sender instanceof Player)) return false;
 
             UUID uniqueId = ((Player) sender).getUniqueId();
             Tag tag = getTagManager().getTag(uniqueId);
             if (tag == null || tag.isExpired() || !getTagManager().isTagged(uniqueId)) {
-                sender.sendMessage(GREEN + "You are not in combat.");
+                sender.sendMessage(getSettings().getCommandUntagMessage());
                 return true;
             }
 
-            String duration = DurationUtils.format(tag.getTagDuration());
-            sender.sendMessage(RED + duration + GRAY + " remaining on your combat timer.");
+            String duration = settings.formatDuration(tag.getTagDuration());
+            sender.sendMessage(getSettings().getCommandTagMessage().replace("{time}", duration));
         } else if (cmd.getName().equals("ctlitelogout")) {
             if (!(sender instanceof Player)) return false;
 
@@ -153,6 +158,25 @@ public final class CombatTagLite extends JavaPlugin {
 
             // Attempt to start a new logout task
             SafeLogoutTask.run(this, player);
+        } else if (cmd.getName().equals("ctliteuntag")) {
+
+            if (args.length < 1) {
+                sender.sendMessage(RED + "Please specify a player to untag");
+                return true;
+            }
+
+            @SuppressWarnings("deprecation")
+            Player player = getServer().getPlayer(args[0]);
+            if (player == null) {
+                sender.sendMessage(RED + args[0] + " is not currently online!");
+                return true;
+            }
+            UUID uniqueId = player.getUniqueId();
+            if (getTagManager().untag(uniqueId)) {
+                sender.sendMessage(GREEN + "Successfully untagged " + player.getName() + ".");
+            } else {
+                sender.sendMessage(GREEN + player.getName() + " is already untagged.");
+            }
         }
 
         return true;

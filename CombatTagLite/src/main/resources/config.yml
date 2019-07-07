@@ -1,5 +1,5 @@
 # Don't touch this. It's here to determine whether you need to refresh your config.
-config-version: 20
+config-version: 25
 
 # The duration in seconds that both the attacker and victim should be tagged in combat.
 tag-duration: 15
@@ -7,8 +7,17 @@ tag-duration: 15
 # This message is displayed to both the attacker and victim when newly tagged. Set this to '' to display nothing. {opponent} is the other player.
 tag-message: '&cYou have engaged in combat with &b{opponent}&c. Type &b/ct &cto check your timer.'
 
+# This message is displayed to both the attacker and victim when newly tagged if the opponent is unknown. Set this to '' to display nothing.
+tag-unknown-message: '&cYou have engaged in combat. Type &b/ct &cto check your timer.'
+
 # This message is displayed the player when their tag expires. Set this to '' to display nothing.
 untag-message: '&aYou are no longer in combat.'
+
+# This message is displayed to the player when they attempt to check the remaining time on their tag, while not being tagged
+command-untag-message: '&aYou are not in combat.'
+ 
+# This message is displayed to the player when they check the remaining time on their tag via command. {time} will be replaced with the remaining tag time.
+command-tag-message: '&c{time} seconds remaining on your combat timer.'
 
 # Resets the tag time when the tagged player throws an enderpearl.
 reset-tag-on-pearl: false
@@ -37,6 +46,10 @@ logout-pending-message: '&7Logging out safely in &b{remaining}&7...'
 # Untags the player if they are kicked from combat rather than logging.
 untag-on-kick: false
 
+# If a player is kicked with a kick message that contains any of the following, they will not be untagged.
+untag-on-kick-blacklist:
+  - disconnect.spam
+
 # Only the attacker will be tagged if this is set to true.
 only-tag-attacker: false
 
@@ -48,6 +61,11 @@ disable-block-edit: false
 
 # This message is displayed when a player attempts to edit blocks within pvp if block editing is disabled in pvp.
 disable-block-edit-message: '&bBlock editing &cis disabled in combat.'
+
+# Disable a player from accessing storage (like chests and brewing stands) in combat
+disable-storage-access: false
+
+disable-storage-access-message: '&bAccess to storage &cis disabled in combat'
 
 # Prevent players in creative from getting tagged.
 disable-creative-tags: true
@@ -123,185 +141,27 @@ disabled-worlds: [world_the_end]
 # This message is displayed when the player tries to execute a disabled command whilst in combat.
 disabled-command-message: '&b{command}&c is disabled in combat.'
 
-# These commands are unusable by players who are combat tagged.
-disabled-commands:
+# These commands are unusable by players who are combat tagged. Use '*' to blacklist all commands.
+command-blacklist:
+  - '*'
 
-  # CombatTagPlus
+# Customize the words used to describe durations (both singular and plural)
+duration-words:
+  day: "day"
+  days: "days"
+  hour: "hour"
+  hours: "hours"
+  minute: "minute"
+  minutes: "minutes"
+  second: "second"
+  seconds: "seconds"
+
+# These commands are exceptions to the blacklist.
+command-whitelist:
+  - ct
+  - ctplus
+  - combattag
   - ctlog
   - logout
   - ctlogout
   - ctpluslogout
-  - 'combattagplus:ctlog'
-  - 'combattagplus:logout'
-  - 'combattagplus:ctlogout'
-  - 'combattagplus:ctpluslogout'
-
-  # Factions
-  - f home
-  - f leave
-  - f warp
-  - f w
-
-  # LibsDisguises
-  - d
-  - disguise
-  - 'libsdisguises:d'
-  - 'libsdisguises:disguise'
-
-  # PlayerVaults
-  - pv
-  - vault
-  - chest
-  - playervaults
-  - 'playervaults:pv'
-  - 'playervaults:vault'
-  - 'playervaults:chest'
-  - 'playervaults:playervaults'
-
-  # FBasics
-  - wild
-  - wilderness
-  - 'fbasics:wild'
-  - 'fbasics:wilderness'
-
-  # mcMMO
-  - ptp
-  - 'mcmmo:ptp'
-
-  # BattleArena
-  - arena
-  - a
-  - 'battlearena:arena'
-  - 'battlearena:a'
-
-  # MobArena
-  - mobarena
-  - ma
-  - 'mobarena:mobarena'
-  - 'mobarena:ma'
-
-  # PlotMe
-  - plotme
-  - plot
-  - p
-  - 'plotme:plotme'
-  - 'plotme:plot'
-  - 'plotme:p'
-
-  # floAuction
-  - auction
-  - auc
-  - sauction
-  - sauc
-  - bid
-  - 'floauction:auction'
-  - 'floauction:auc'
-  - 'floauction:sauction'
-  - 'floauction:sauc'
-  - 'floauction:bid'
-
-  # Essentials
-  - spawn
-  - home
-  - homes
-  - warp
-  - warps
-  - back
-  - return
-  - call
-  - tpa
-  - tpask
-  - tpahere
-  - tpaccept
-  - tpyes
-  - clearinventory
-  - clearinvent
-  - clean
-  - clear
-  - ci
-  - fix
-  - repair
-  - suicide
-  - espawn
-  - ec
-  - enderchest
-  - endersee
-  - echest
-  - sell
-  - ehome
-  - ehomes
-  - ewarp
-  - ewarps
-  - eback
-  - ereturn
-  - ecall
-  - etpa
-  - etpask
-  - etpahere
-  - etpaccept
-  - etpyes
-  - eclearinventory
-  - eclearinvent
-  - eclean
-  - eclear
-  - eci
-  - esuicide
-  - efix
-  - erepair
-  - eec
-  - eenderchest
-  - eechest
-  - eendersee
-  - esell
-  - 'essentials:spawn'
-  - 'essentials:home'
-  - 'essentials:homes'
-  - 'essentials:warp'
-  - 'essentials:warps'
-  - 'essentials:back'
-  - 'essentials:return'
-  - 'essentials:call'
-  - 'essentials:tpa'
-  - 'essentials:tpask'
-  - 'essentials:tpahere'
-  - 'essentials:tpaccept'
-  - 'essentials:tpyes'
-  - 'essentials:clearinventory'
-  - 'essentials:clearinvent'
-  - 'essentials:clean'
-  - 'essentials:clear'
-  - 'essentials:ci'
-  - 'essentials:fix'
-  - 'essentials:repair'
-  - 'essentials:suicide'
-  - 'essentials:ec'
-  - 'essentials:enderchest'
-  - 'essentials:endersee'
-  - 'essentials:echest'
-  - 'essentials:sell'
-  - 'essentials:espawn'
-  - 'essentials:ehome'
-  - 'essentials:ehomes'
-  - 'essentials:ewarp'
-  - 'essentials:ewarps'
-  - 'essentials:eback'
-  - 'essentials:ereturn'
-  - 'essentials:ecall'
-  - 'essentials:etpa'
-  - 'essentials:etpask'
-  - 'essentials:etpahere'
-  - 'essentials:etpaccept'
-  - 'essentials:etpyes'
-  - 'essentials:eclearinventory'
-  - 'essentials:eclearinvent'
-  - 'essentials:eclean'
-  - 'essentials:eclear'
-  - 'essentials:eci'
-  - 'essentials:esuicide'
-  - 'essentials:efix'
-  - 'essentials:erepair'
-  - 'essentials:eec'
-  - 'essentials:eenderchest'
-  - 'essentials:eechest'
-  - 'essentials:eendersee'
-  - 'essentials:esell'

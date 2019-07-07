@@ -1,7 +1,6 @@
 package net.minelink.ctlite.task;
 
 import net.minelink.ctlite.CombatTagLite;
-import net.minelink.ctlite.util.DurationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -77,7 +76,7 @@ public final class SafeLogoutTask extends BukkitRunnable {
 
         // Inform player
         if (remainingSeconds < this.remainingSeconds) {
-            String remaining = DurationUtils.format(remainingSeconds);
+            String remaining = plugin.getSettings().formatDuration(remainingSeconds);
 
             if (!plugin.getSettings().getLogoutPendingMessage().isEmpty()) {
                 player.sendMessage(plugin.getSettings().getLogoutPendingMessage().replace("{remaining}", remaining));

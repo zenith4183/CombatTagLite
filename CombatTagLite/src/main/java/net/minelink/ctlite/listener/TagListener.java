@@ -10,6 +10,7 @@ import net.minelink.ctlite.task.TagUpdateTask;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -29,6 +30,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
 
 public final class TagListener implements Listener {
@@ -55,67 +57,75 @@ public final class TagListener implements Listener {
     public void tagPlayer(EntityDamageByEntityEvent event) {
         Entity victimEntity = event.getEntity();
         Entity attackerEntity = event.getDamager();
-        Player victim, attacker;
-
-        // Find victim
-        if (victimEntity instanceof Tameable) {
-            AnimalTamer owner = ((Tameable) victimEntity).getOwner();
-            if (!(owner instanceof Player)) return;
-
-            // Victim is a player's pet
-            victim = (Player) owner;
-        } else if (victimEntity instanceof Player) {
-            // Victim is a player
-            victim = (Player) victimEntity;
-        } else {
-            // Victim is not a player
-            return;
-        }
+        Player victim = determineVictim(victimEntity);
+        if (victim == null) return;
 
         // Do not tag the victim if they are in creative mode
         if (victim.getGameMode() == GameMode.CREATIVE && plugin.getSettings().disableCreativeTags()) {
             victim = null;
         }
 
-        // Find attacker
-        if (attackerEntity instanceof LivingEntity && plugin.getSettings().mobTagging()) {
-            attacker = null;
-        } else if (attackerEntity instanceof Projectile) {
-            Projectile p = (Projectile) attackerEntity;
-            ProjectileSource source = p.getShooter();
-            if (!(source instanceof Player)) return;
+        LivingEntity attacker = determineAttacker(attackerEntity, victim);
+        if (attacker == null) return;
+        Player attackingPlayer = attacker instanceof Player ? (Player) attacker : null;
 
-            // Ignore self inflicted ender pearl damage
-            if (p.getType() == EntityType.ENDER_PEARL && victim == source) return;
+        // Do nothing if damage is self-inflicted
+        if (Objects.equals(victim, attacker) && plugin.getSettings().disableSelfTagging()) return;
 
-            // Attacker is a projectile
-            attacker = (Player) source;
-        } else if (attackerEntity instanceof Tameable) {
-            AnimalTamer owner = ((Tameable) attackerEntity).getOwner();
-            if (!(owner instanceof Player)) return;
-
-            // Attacker is a player's pet
-            attacker = (Player) owner;
-        } else if (attackerEntity instanceof Player) {
-
-            // Attacker is a player
-            attacker = (Player) attackerEntity;
-
-            // Do not tag the attacker if they are in creative mode
-            if (attacker.getGameMode() == GameMode.CREATIVE && plugin.getSettings().disableCreativeTags()) {
-                attacker = null;
-            }
-
-        } else {
-            // Attacker is not a player
+        // Do not tag the attacker if they are in creative mode
+        if (attackingPlayer != null && attackingPlayer.getGameMode() == GameMode.CREATIVE && plugin.getSettings().disableCreativeTags()) {
             return;
         }
 
-        // Do nothing if damage is self-inflicted
-        if (victim == attacker && plugin.getSettings().disableSelfTagging()) return;
-
         // Combat tag victim and player
-        plugin.getTagManager().tag(victim, attacker);
+        plugin.getTagManager().tag(victim, attackingPlayer);
+    }
+
+    private Player determineVictim(Entity victimEntity) {
+        // Find victim
+        if (victimEntity instanceof Tameable) {
+            AnimalTamer owner = ((Tameable) victimEntity).getOwner();
+            if (!(owner instanceof Player)) return null;
+
+            // Victim is a player's pet
+            return (Player) owner;
+        } else if (victimEntity instanceof Player) {
+            // Victim is a player
+            return (Player) victimEntity;
+        } else {
+            // Victim is not a player
+            return null;
+        }
+    }
+
+    private LivingEntity determineAttacker(Entity attackerEntity, Player victim) {
+        // Find attacker
+        if (attackerEntity instanceof Creature && plugin.getSettings().mobTagging()) {
+            return (LivingEntity) attackerEntity;
+        } else if (attackerEntity instanceof Projectile) {
+            Projectile p = (Projectile) attackerEntity;
+            Entity source;
+            if (p.getShooter() instanceof Entity) {
+                source = (Entity) p.getShooter();
+            } else {
+                return null;
+            }
+
+            // Ignore self inflicted ender pearl damage
+            if (p.getType() == EntityType.ENDER_PEARL && Objects.equals(victim, source)) return null;
+
+            return determineAttacker(source, victim);
+        } else if (attackerEntity instanceof Tameable) {
+            AnimalTamer owner = ((Tameable) attackerEntity).getOwner();
+            if (owner instanceof Player) {
+                // Attacker is a player's pet
+                return (Player) owner;
+            }
+        } else if (attackerEntity instanceof Player) {
+            // Attacker is a player
+            return (Player) attackerEntity;
+        }
+        return null;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -153,7 +163,7 @@ public final class TagListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void tagPlayer(ProjectileLaunchEvent event) {
         // Do nothing if option is disabled
-        if (plugin.getSettings().resetTagOnPearl()) return;
+        if (!plugin.getSettings().resetTagOnPearl()) return;
 
         // Do nothing if the launched projectile is not an ender pearl
         Projectile entity = event.getEntity();
@@ -204,6 +214,9 @@ public final class TagListener implements Listener {
         // Do nothing if user has not specified to kill on kick
         if (!plugin.getSettings().untagOnKick()) return;
 
+        // Do nothing if blacklist contains this kick message
+        if (plugin.getSettings().getUntagOnKickBlacklist().contains(event.getReason())) return;
+
         // Remove the players tag
         Player player = event.getPlayer();
         plugin.getTagManager().untag(player.getUniqueId());
@@ -211,22 +224,38 @@ public final class TagListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendTagMessage(PlayerCombatTagEvent event) {
-        // Do nothing if tag message is blank
-        String message = plugin.getSettings().getTagMessage();
-        if (message.isEmpty()) return;
-
         Player attacker = event.getAttacker();
         Player victim = event.getVictim();
 
         // Send combat tag notification to victim
-        if (victim != null && !plugin.getTagManager().isTagged(victim.getUniqueId()) &&
-                !plugin.getSettings().onlyTagAttacker()) {
-            victim.sendMessage(message.replace("{opponent}", (attacker != null ? attacker.getName() : "someone") ));
+        if (victim != null && !plugin.getTagManager().isTagged(victim.getUniqueId())
+                && !plugin.getSettings().onlyTagAttacker()) {
+            if (attacker != null) {
+                String message = plugin.getSettings().getTagMessage();
+                if (!message.isEmpty()) {
+                    victim.sendMessage(message.replace("{opponent}", attacker.getName()));
+                }
+            } else {
+                String message = plugin.getSettings().getTagUnknownMessage();
+                if (!message.isEmpty()) {
+                    victim.sendMessage(message);
+                }
+            }
         }
 
         // Send combat tag notification to attacker
         if (attacker != null && !plugin.getTagManager().isTagged(attacker.getUniqueId())) {
-            attacker.sendMessage(message.replace("{opponent}", (victim != null ? victim.getName() : "someone")));
+            if (victim != null) {
+                String message = plugin.getSettings().getTagMessage();
+                if (!message.isEmpty()) {
+                    attacker.sendMessage(message.replace("{opponent}", victim.getName()));
+                }
+            } else {
+                String message = plugin.getSettings().getTagUnknownMessage();
+                if (!message.isEmpty()) {
+                    attacker.sendMessage(message);
+                }
+            }
         }
     }
 

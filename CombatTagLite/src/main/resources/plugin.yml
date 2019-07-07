@@ -20,11 +20,17 @@ commands:
     description: Logs out the player without spawning an NPC or killing them
     permission: ctlite.logout
     permission-message: '§cYou do not have permission to use that command.'
+  ctliteuntag:
+    aliases: [ctuntag, untag]
+    description: Untags the specified player
+    permission: ctlite.untag
+    permission-message: '§cYou do not have permission to use that command.'
 permissions:
   ctlite.reload: {default: op}
   ctlite.bypass.tag: {default: op}
   ctlite.bypass.command: {default: op}
   ctlite.bypass.blockedit: {default: op}
+  ctlite.bypass.storageaccess: {default: op}
   ctlite.bypass.enderpearl: {default: op}
   ctlite.bypass.flying: {default: op}
   ctlite.bypass.teleport: {default: op}
