@@ -60,8 +60,8 @@
       <url>http://repo.minelink.net/content/repositories/thirdparty</url>
     </repository>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        <id>spigot-repo</id>
+        <url>http://repo.md-5.net/content/groups/public/</url>
     </repository>
     <repository>
         <id>sk89q-repo</id>
@@ -75,9 +75,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.9-R0.1-SNAPSHOT</version>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.12.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
