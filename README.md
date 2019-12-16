@@ -14,20 +14,16 @@
 * Disable combat tagging for specific worlds
 * Deny specific commands while player is in combat
 * Disallow running back to safety while in combat (can also render a forcefield)
-* Supports WorldGuard PVP deny flag (WorldGuard 6.x supported)
+* Supports WorldGuard PVP deny flag (WorldGuard 7.0 supported)
 * Works with BarAPI to show a boss bar counting down with the player's remaining combat timer
-  * _These custom BarAPI builds by @vemacs are more compatible than the official ones:_
-  * Spigot 1.8.0: [Download](http://ci.minelink.net/job/BarAPI/5/artifact/target/BarAPI.jar)
-  * Spigot 1.7.10 / 1.8 Protocol Patch: [Download](http://ci.minelink.net/job/BarAPI/4/artifact/target/BarAPI.jar)
 
 ## Installation
 
 1. Obtain the latest version of CombatTagLite from the [build server](https://drone.io/github.com/zenith4183/CombatTagLite/files).
 2. Copy or move **CombatTagLite.jar** into your server's *plugins* folder.
-3. **Optionally** obtain and install a compatible version of BarAPI (see the *Features* section above for downloads)
-4. Start the server. _This creates a new file **plugins/CombatTagLite/config.yml**_
-5. Edit the newly created configuration file with desired behavior.
-6. If you made any changes, run the command **/ctreload** from console or as an operator.
+3. Start the server. _This creates a new file **plugins/CombatTagLite/config.yml**_
+4. Edit the newly created configuration file with desired behavior.
+5. If you made any changes, run the command **/ctreload** from console or as an operator.
 
 ## Permissions
 

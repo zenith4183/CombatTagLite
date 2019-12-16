@@ -23,22 +23,6 @@ public final class BlockPosition {
         this(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-    public String getWorld() {
-        return world;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

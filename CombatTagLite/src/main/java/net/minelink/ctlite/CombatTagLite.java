@@ -165,7 +165,6 @@ public final class CombatTagLite extends JavaPlugin {
                 return true;
             }
 
-            @SuppressWarnings("deprecation")
             Player player = getServer().getPlayer(args[0]);
             if (player == null) {
                 sender.sendMessage(RED + args[0] + " is not currently online!");

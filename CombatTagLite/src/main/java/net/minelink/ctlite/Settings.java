@@ -126,7 +126,7 @@ public final class Settings {
 
                 // Write the comments if they are valid
                 Object comments = section.get("comments");
-                if (comments != null && comments instanceof List) {
+                if (comments instanceof List) {
                     for (Object o : (List) comments) {
                         writer.write(o.toString());
                         writer.newLine();
@@ -206,10 +206,6 @@ public final class Settings {
 
     public boolean resetTagOnPearl() {
         return plugin.getConfig().getBoolean("reset-tag-on-pearl");
-    }
-
-    public boolean playEffect() {
-        return plugin.getConfig().getBoolean("play-effect");
     }
 
     public boolean alwaysSpawn() {

@@ -7,8 +7,6 @@ import java.util.UUID;
 
 public final class Tag {
 
-    private long tagTime = System.currentTimeMillis();
-
     private long expireTime;
 
     private UUID victimId;
@@ -33,18 +31,6 @@ public final class Tag {
             this.attackerId = attacker.getUniqueId();
             this.attackerName = attacker.getName();
         }
-    }
-
-    public long getTagTime() {
-        return tagTime;
-    }
-
-    public long getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(long expireTime) {
-        this.expireTime = expireTime;
     }
 
     public UUID getVictimId() {

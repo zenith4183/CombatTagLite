@@ -12,14 +12,6 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
         this.capacity = capacity;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
         return size() > capacity;
