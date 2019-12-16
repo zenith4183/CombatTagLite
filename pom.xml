@@ -18,19 +18,8 @@
 
   <modules>
     <module>CombatTagLiteHook</module>
-    <module>CombatTagLiteWG-v6</module>
+    <module>CombatTagLiteWG</module>
     <module>CombatTagLite</module>
   </modules>
 
-
-    <distributionManagement>
-        <repository>
-            <id>byteflux-releases</id>
-            <url>http://repo.byteflux.net/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>byteflux-snapshots</id>
-            <url>http://repo.byteflux.net/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
