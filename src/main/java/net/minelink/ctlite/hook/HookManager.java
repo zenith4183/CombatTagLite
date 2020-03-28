@@ -1,5 +1,10 @@
 package net.minelink.ctlite.hook;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import net.minelink.ctlite.CombatTagLite;
 import net.minelink.ctlite.BlockPosition;
 import net.minelink.ctlite.util.LruCache;
@@ -11,27 +16,10 @@ import java.util.List;
 
 public final class HookManager {
 
-    private final List<Hook> hooks = new ArrayList<>();
-
     private final LruCache<BlockPosition, PvpBlock> pvpBlocks = new LruCache<>(100000);
 
-    private final CombatTagLite plugin;
+    public HookManager() {}
 
-    public HookManager(CombatTagLite plugin) {
-        this.plugin = plugin;
-    }
-
-    public boolean addHook(Hook hook) {
-        return hooks.add(hook);
-    }
-
-    public boolean removeHook(Hook hook) {
-        return hooks.remove(hook);
-    }
-
-    public List<Hook> getHooks() {
-        return Collections.unmodifiableList(hooks);
-    }
 
     public boolean isPvpEnabledAt(Location location) {
         long currentTime = System.currentTimeMillis();
@@ -49,15 +37,20 @@ public final class HookManager {
             pvpBlocks.put(position, pvpBlock);
         }
 
-        for (Hook hook : hooks) {
-            if (!hook.isPvpEnabledAt(location)) {
-                pvpBlock.enabled = false;
-                break;
-            }
+        if (!isPvpEnabledAtRegion(location)) {
+            pvpBlock.enabled = false;
         }
 
         return pvpBlock.enabled;
     }
+
+    public boolean isPvpEnabledAtRegion(Location loc) {
+        RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
+        ApplicableRegionSet applicableRegionSet = query.getApplicableRegions(BukkitAdapter.adapt(loc));
+
+        return applicableRegionSet.testState(null, Flags.PVP);
+    }
+
 
     private static class PvpBlock {
 

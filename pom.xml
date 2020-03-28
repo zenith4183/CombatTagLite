@@ -2,24 +2,91 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>CombatTagLiteParent</artifactId>
+    <groupId>net.minelink</groupId>
+    <version>1.3.2-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.minelink</groupId>
-  <artifactId>CombatTagLiteParent</artifactId>
-  <packaging>pom</packaging>
-  <version>1.3.2-SNAPSHOT</version>
+  <artifactId>CombatTagLite</artifactId>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 
-  <modules>
-    <module>CombatTagLiteHook</module>
-    <module>CombatTagLiteWG</module>
-    <module>CombatTagLite</module>
-  </modules>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <finalName>CombatTagLite</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
+  <repositories>
+    <repository>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+        <id>sk89q-repo</id>
+        <url>http://maven.sk89q.com/repo/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.15.2-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+<!--
+    <dependency>
+      <groupId>net.minelink</groupId>
+      <artifactId>CombatTagLiteHook</artifactId>
+      <version>1.3.2-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.minelink</groupId>
+      <artifactId>CombatTagLiteWG-v6</artifactId>
+      <version>1.3.2-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+-->
+    <dependency>
+      <groupId>com.sk89q.worldguard</groupId>
+      <artifactId>worldguard-bukkit</artifactId>
+      <version>7.0.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.sk89q.worldedit</groupId>
+        <artifactId>worldedit-bukkit</artifactId>
+        <version>7.1.0-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>

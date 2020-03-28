@@ -1,6 +1,5 @@
 package net.minelink.ctlite;
 
-import net.minelink.ctlite.hook.Hook;
 import net.minelink.ctlite.hook.HookManager;
 import net.minelink.ctlite.listener.ForceFieldListener;
 import net.minelink.ctlite.listener.InstakillListener;
@@ -59,7 +58,7 @@ public final class CombatTagLite extends JavaPlugin {
         }
 
         // Initialize plugin state
-        hookManager = new HookManager(this);
+        hookManager = new HookManager();
         tagManager = new TagManager(this);
 
         integrateWorldGuard();
@@ -113,18 +112,6 @@ public final class CombatTagLite extends JavaPlugin {
         // Determine which hook implementation to use
         String className = "net.minelink.ctlite.worldguard.v" + (v.startsWith("5") ? 5 : 6) + ".WorldGuardHook";
 
-        try {
-            // Create and add WorldGuardHook
-            getHookManager().addHook((Hook) Class.forName(className).newInstance());
-        } catch (Exception e) {
-            // Something went wrong, chances are it's a newer, incompatible WorldGuard
-            getLogger().warning("**WARNING**");
-            getLogger().warning("Failed to enable WorldGuard integration due to errors.");
-            getLogger().warning("This is most likely due to a newer WorldGuard.");
-
-            // Let's leave a stack trace in console for reporting
-            e.printStackTrace();
-        }
     }
 
     @Override

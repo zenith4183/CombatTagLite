@@ -58,6 +58,7 @@ public final class TagListener implements Listener {
         Entity victimEntity = event.getEntity();
         Entity attackerEntity = event.getDamager();
         Player victim = determineVictim(victimEntity);
+
         if (victim == null) return;
 
         // Do not tag the victim if they are in creative mode
