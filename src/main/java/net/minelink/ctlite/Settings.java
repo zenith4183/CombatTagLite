@@ -208,10 +208,6 @@ public final class Settings {
         return plugin.getConfig().getBoolean("reset-tag-on-pearl");
     }
 
-    public boolean alwaysSpawn() {
-        return plugin.getConfig().getBoolean("always-spawn");
-    }
-
     public boolean mobTagging() {
         return plugin.getConfig().getBoolean("mob-tagging");
     }
@@ -359,10 +355,6 @@ public final class Settings {
 
     public byte getForceFieldMaterialDamage() {
         return (byte) plugin.getConfig().getInt("force-field-material-damage");
-    }
-
-    public boolean useWorldGuard() {
-        return plugin.getConfig().getBoolean("worldguard");
     }
 
     public List<String> getDisabledWorlds() {

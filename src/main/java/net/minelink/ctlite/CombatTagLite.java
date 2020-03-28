@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
@@ -61,8 +60,6 @@ public final class CombatTagLite extends JavaPlugin {
         hookManager = new HookManager();
         tagManager = new TagManager(this);
 
-        integrateWorldGuard();
-
         BarUtils.init();
 
         // Build player cache from currently online players
@@ -94,24 +91,6 @@ public final class CombatTagLite extends JavaPlugin {
     @Override
     public void onDisable() {
         TagUpdateTask.cancelTasks(this);
-    }
-
-       private void integrateWorldGuard() {
-        if (!getSettings().useWorldGuard()) {
-            return;
-        }
-
-        // Determine if WorldGuard is loaded
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
-        if (plugin == null) {
-            return;
-        }
-
-        String v = plugin.getDescription().getVersion();
-
-        // Determine which hook implementation to use
-        String className = "net.minelink.ctlite.worldguard.v" + (v.startsWith("5") ? 5 : 6) + ".WorldGuardHook";
-
     }
 
     @Override

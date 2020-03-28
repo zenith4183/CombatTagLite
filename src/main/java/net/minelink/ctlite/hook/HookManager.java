@@ -5,14 +5,9 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.minelink.ctlite.CombatTagLite;
 import net.minelink.ctlite.BlockPosition;
 import net.minelink.ctlite.util.LruCache;
 import org.bukkit.Location;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public final class HookManager {
 

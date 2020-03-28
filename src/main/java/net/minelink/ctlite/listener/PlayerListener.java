@@ -55,7 +55,7 @@ public final class PlayerListener implements Listener {
         if (player.isDead()) return;
 
         boolean isTagged = plugin.getTagManager().isTagged(player.getUniqueId());
-        if (!isTagged && !plugin.getSettings().alwaysSpawn()) return;
+        if (!isTagged) return;
 
         // Do nothing if player is not within enabled world
         if (plugin.getSettings().getDisabledWorlds().contains(player.getWorld().getName())) return;
@@ -403,7 +403,7 @@ public final class PlayerListener implements Listener {
         if (player.isDead()) return;
 
         boolean isTagged = plugin.getTagManager().isTagged(player.getUniqueId());
-        if (!isTagged && !plugin.getSettings().alwaysSpawn()) return;
+        if (!isTagged) return;
 
         // Do nothing if player is not within enabled world
         if (plugin.getSettings().getDisabledWorlds().contains(player.getWorld().getName()))

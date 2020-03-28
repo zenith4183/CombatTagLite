@@ -25,9 +25,6 @@ reset-tag-on-pearl: false
 # Plays an effect when a player logs off during combat.
 play-effect: true
 
-# Always spawns the NPC even without combat tagged to prevent any chance of running away.
-always-spawn: false
-
 # Allows mobs to combat tag players.
 mob-tagging: false
 
@@ -105,6 +102,9 @@ kill-message: '&8&l>> &c{victim} was slain by {attacker}'
 # Same as above, this is displayed when a player is killed by another player with an item in hand.
 kill-message-item: '&8&l>> &c{victim} was slain by {attacker} with a {item}'
 
+# Whether to instantly kill a tagged player upon logging out
+instantly-kill: true
+
 # Enables BarAPI integration for displaying a boss bar counting down with the remaining tag time.
 barapi: true
 
@@ -131,9 +131,6 @@ force-field-material: STAINED_GLASS
 
 # Damage value of the material specified above.
 force-field-material-damage: 14
-
-# Enables WorldGuard integration for disabling combat tagging in regions with PVP disabled.
-worldguard: true
 
 # This is a list of worlds where combat tagging should be disabled.
 disabled-worlds: [world_the_end]
