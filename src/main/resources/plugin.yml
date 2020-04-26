@@ -4,6 +4,7 @@ version: ${version}
 authors: [Byteflux, Sudzzy]
 main: net.minelink.ctlite.CombatTagLite
 softdepend: [BarAPI, WorldGuard, BossBarAPI, ActionBarAPI]
+api-version: "1.13"
 commands:
   combattaglite:
     aliases: [ctlite, ct, combattag]
